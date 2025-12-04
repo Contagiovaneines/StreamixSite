@@ -1,9 +1,12 @@
+
+
 export enum ContentType {
   HOME = 'home',
   LIVE = 'live',
   MOVIE = 'movie',
   SERIES = 'series',
-  CATCHUP = 'catchup'
+  CATCHUP = 'catchup',
+  MY_LIST = 'my_list'
 }
 
 export interface Profile {
@@ -12,6 +15,7 @@ export interface Profile {
   avatar: string;
   isKid: boolean;
   locked?: boolean;
+  pin?: string;
 }
 
 export interface LoginResponse {
@@ -55,6 +59,7 @@ export interface VodStream {
   stream_icon: string;
   rating: string;
   rating_5based: number;
+  ageRating?: string; // e.g., "L", "10", "12", "14", "16", "18"
   added: string;
   category_id: string;
   container_extension: string;
@@ -79,6 +84,7 @@ export interface Series {
   releaseDate: string;
   rating: string;
   rating_5based: number;
+  ageRating?: string; // e.g., "L", "10", "12", "14", "16", "18"
   backdrop_path: string[];
   youtube_trailer: string;
   episode_run_time: string;
@@ -106,4 +112,42 @@ export interface Season {
   season_number: number;
   vote_average: number;
   cover: string;
+}
+
+export interface WatchProgress {
+  contentId: string | number;
+  profileId: number;
+  type: 'movie' | 'series';
+  progress: number; // Percentage 0-100
+  timestamp: number; // Seconds
+  duration: number; // Seconds
+  lastWatched: number; // Unix timestamp
+  meta: {
+    name: string;
+    image: string;
+    subTitle?: string; // e.g. "S1:E2"
+    source: string;
+    backdrop?: string;
+    year?: string;
+    rating?: string;
+    ageRating?: string;
+  };
+}
+
+export interface MyListItem {
+  contentId: string | number;
+  profileId: number;
+  type: 'movie' | 'series';
+  addedAt: number;
+  meta: {
+    name: string;
+    image: string;
+    backdrop?: string;
+    rating?: string;
+    ageRating?: string;
+    year?: string;
+    genre?: string;
+    source?: string; // For movies mostly
+    plot?: string;
+  }
 }

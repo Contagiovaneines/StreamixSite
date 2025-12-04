@@ -1,4 +1,6 @@
-import { Category, LiveStream, VodStream, Series, LoginResponse, Episode } from '../types';
+
+
+import { Category, LiveStream, VodStream, Series, LoginResponse, Episode, WatchProgress, MyListItem } from '../types';
 
 // Mock Data
 const MOCK_CATEGORIES_LIVE: Category[] = [
@@ -23,6 +25,13 @@ const MOCK_CATEGORIES_SERIES: Category[] = [
 ];
 
 const VIDEO_URL = "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
+
+// Helper to assign random age ratings
+const getRandomAgeRating = (index: number) => {
+    const ratings = ["L", "10", "12", "14", "16", "18"];
+    // Deterministic random based on index
+    return ratings[index % ratings.length];
+};
 
 export const mockApi = {
   login: async (u: string, p: string, url: string): Promise<LoginResponse> => {
@@ -85,6 +94,7 @@ export const mockApi = {
         stream_icon: `https://picsum.photos/seed/vod${catId}${i}/300/450`,
         rating: "8.5",
         rating_5based: 4.2,
+        ageRating: i === 0 ? "14" : getRandomAgeRating(i + parseInt(catId)),
         added: "123456789",
         category_id: catId,
         container_extension: "mp4",
@@ -114,6 +124,7 @@ export const mockApi = {
         releaseDate: "2023",
         rating: "9.0",
         rating_5based: 4.5,
+        ageRating: getRandomAgeRating(i + parseInt(catId)),
         backdrop_path: [`https://picsum.photos/seed/backdrop${catId}${i}/1280/720`],
         youtube_trailer: "",
         episode_run_time: "45",
@@ -148,5 +159,76 @@ export const mockApi = {
          }
        }), 500);
     });
+  },
+
+  // --- Watch Progress Methods ---
+
+  getWatchProgress: (profileId: number): WatchProgress[] => {
+    try {
+        const key = `streamix_progress_${profileId}`;
+        const data = localStorage.getItem(key);
+        return data ? JSON.parse(data) : [];
+    } catch (e) {
+        console.error("Error fetching progress", e);
+        return [];
+    }
+  },
+
+  saveWatchProgress: (progress: WatchProgress) => {
+    try {
+        const key = `streamix_progress_${progress.profileId}`;
+        const currentData = mockApi.getWatchProgress(progress.profileId);
+        
+        // Remove existing entry for this content if it exists
+        const filtered = currentData.filter(item => item.contentId !== progress.contentId);
+        
+        // Add updated progress to the beginning of the list
+        const updated = [progress, ...filtered];
+        
+        // Limit history size (optional, e.g., 20 items)
+        const limited = updated.slice(0, 20);
+        
+        localStorage.setItem(key, JSON.stringify(limited));
+    } catch (e) {
+        console.error("Error saving progress", e);
+    }
+  },
+
+  // --- My List Methods ---
+
+  getMyList: (profileId: number): MyListItem[] => {
+    try {
+        const key = `streamix_mylist_${profileId}`;
+        const data = localStorage.getItem(key);
+        return data ? JSON.parse(data) : [];
+    } catch (e) {
+        console.error("Error fetching my list", e);
+        return [];
+    }
+  },
+
+  addToMyList: (item: MyListItem) => {
+    try {
+        const key = `streamix_mylist_${item.profileId}`;
+        const currentData = mockApi.getMyList(item.profileId);
+        if (!currentData.find(i => i.contentId === item.contentId)) {
+            const updated = [item, ...currentData];
+            localStorage.setItem(key, JSON.stringify(updated));
+        }
+    } catch (e) { console.error(e); }
+  },
+
+  removeFromMyList: (profileId: number, contentId: string | number) => {
+     try {
+        const key = `streamix_mylist_${profileId}`;
+        const currentData = mockApi.getMyList(profileId);
+        const updated = currentData.filter(i => i.contentId !== contentId);
+        localStorage.setItem(key, JSON.stringify(updated));
+    } catch (e) { console.error(e); }
+  },
+
+  isInMyList: (profileId: number, contentId: string | number): boolean => {
+      const list = mockApi.getMyList(profileId);
+      return !!list.find(i => i.contentId === contentId);
   }
 };

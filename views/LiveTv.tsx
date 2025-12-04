@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { Category, LiveStream } from '../types';
 import { mockApi } from '../services/mockApi';
@@ -112,6 +113,7 @@ export const LiveTv: React.FC = () => {
         {selectedChannel ? (
             <div className="flex-1 relative">
                 <VideoPlayer 
+                    key={selectedChannel.stream_id} // Force re-mount on channel change
                     src={selectedChannel.direct_source} 
                     title={selectedChannel.name}
                     autoPlay={true}
