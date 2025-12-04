@@ -482,7 +482,7 @@ const App: React.FC = () => {
                     <div className={`w-6 h-6 rounded overflow-hidden border-2 border-transparent`}>
                         <img src={selectedProfile?.avatar} className="w-full h-full object-cover" />
                     </div>
-                    <span className="text-[10px] font-medium">Minha Netflix</span>
+                    <span className="text-[10px] font-medium">Perfil</span>
                 </button>
             </div>
         </div>
