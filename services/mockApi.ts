@@ -1,6 +1,6 @@
 
 
-import { Category, LiveStream, VodStream, Series, LoginResponse, Episode, WatchProgress, MyListItem } from '../types';
+import { Category, LiveStream, VodStream, Series, LoginResponse, Episode, WatchProgress, MyListItem, NotificationItem } from '../types';
 
 // Mock Data
 const MOCK_CATEGORIES_LIVE: Category[] = [
@@ -230,5 +230,91 @@ export const mockApi = {
   isInMyList: (profileId: number, contentId: string | number): boolean => {
       const list = mockApi.getMyList(profileId);
       return !!list.find(i => i.contentId === contentId);
+  },
+
+  getNotifications: (): NotificationItem[] => {
+      return [
+          {
+              id: '1',
+              title: 'Gostou de Stranger Things?',
+              subtitle: 'Experimente Stranger Things: 1984\nOntem',
+              image: 'https://picsum.photos/seed/stranger/100/100',
+              type: 'suggestion',
+              read: false,
+              date: 'Ontem'
+          },
+          {
+              id: '2',
+              title: 'As montanhas despertam',
+              subtitle: 'Surgem forças sombrias\n01 de dez.',
+              image: 'https://picsum.photos/seed/troll/100/150',
+              type: 'new',
+              read: false,
+              date: '01 de dez.'
+          },
+          {
+              id: '3',
+              title: 'Novidade',
+              subtitle: 'O Chamado da Floresta\n01 de dez.',
+              image: 'https://picsum.photos/seed/floresta/100/100',
+              type: 'new',
+              read: false,
+              date: '01 de dez.'
+          },
+          {
+              id: '4',
+              title: 'Já disponível',
+              subtitle: 'Evento ao vivo\n29 de nov.',
+              image: 'https://picsum.photos/seed/wwe/100/100',
+              type: 'new',
+              read: true,
+              date: '29 de nov.'
+          },
+          {
+              id: '5',
+              title: 'Netflix – o que vai rolar',
+              subtitle: 'Veja o que está chegando.\n28 de nov.',
+              image: 'https://picsum.photos/seed/calendar/100/100',
+              type: 'reminder',
+              read: false,
+              date: '28 de nov.'
+          },
+          {
+              id: '6',
+              title: 'Procurando algo para jogar?',
+              subtitle: 'Recomendamos Sonic Mania Plus\n26 de nov.',
+              image: 'https://picsum.photos/seed/sonic/100/100',
+              type: 'suggestion',
+              read: false,
+              date: '26 de nov.'
+          },
+          {
+              id: '7',
+              title: 'Sugestões para assistir',
+              subtitle: 'Descubra nossas recomendações para você.\n24 de nov.',
+              image: 'https://picsum.photos/seed/beijo/100/100',
+              type: 'suggestion',
+              read: true,
+              date: '24 de nov.'
+          },
+           {
+              id: '8',
+              title: 'Novidade',
+              subtitle: 'Eu, Eddie\n12 de nov.',
+              image: 'https://picsum.photos/seed/eddie/100/100',
+              type: 'new',
+              read: false,
+              date: '12 de nov.'
+          },
+           {
+              id: '9',
+              title: 'Novidade',
+              subtitle: 'A Melhor Professora\n05 de nov.',
+              image: 'https://picsum.photos/seed/prof/100/100',
+              type: 'new',
+              read: false,
+              date: '05 de nov.'
+          }
+      ];
   }
 };

@@ -151,3 +151,13 @@ export interface MyListItem {
     plot?: string;
   }
 }
+
+export interface NotificationItem {
+  id: string;
+  title: string;
+  subtitle: string;
+  date: string;
+  image: string;
+  type: 'new' | 'suggestion' | 'reminder';
+  read: boolean;
+}

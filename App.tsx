@@ -9,6 +9,7 @@ import { Series } from './views/Series';
 import { Settings } from './views/Settings';
 import { Profiles } from './views/Profiles';
 import { MyList } from './views/MyList';
+import { NotificationsOverlay } from './components/NotificationsOverlay';
 import { User, Lock, Server, Smartphone, ChevronRight, Settings as SettingsIcon, Search, Film, Tv, MonitorPlay, Cast, Download, Bell, ChevronDown, Home, PlaySquare } from 'lucide-react';
 
 enum AppState {
@@ -24,6 +25,7 @@ const App: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState<ContentType>(ContentType.HOME);
   const [showSettings, setShowSettings] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
   const [selectedProfile, setSelectedProfile] = useState<Profile | undefined>(undefined);
   
   // Login Form State
@@ -320,7 +322,13 @@ const App: React.FC = () => {
                     className="text-white drop-shadow-md cursor-pointer" 
                     onClick={() => setShowMobileSearch(!showMobileSearch)}
                 />
-                <Bell size={22} className="text-white drop-shadow-md" />
+                <button 
+                    onClick={() => setShowNotifications(true)}
+                    className="relative"
+                >
+                    <Bell size={22} className="text-white drop-shadow-md" />
+                    <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-600 rounded-full border border-black"></span>
+                </button>
             </div>
         </div>
         
@@ -338,6 +346,13 @@ const App: React.FC = () => {
                     className={`px-4 py-1.5 rounded-full text-xs font-medium border transition-colors whitespace-nowrap ${activeTab === ContentType.MOVIE ? 'bg-white text-black border-white' : 'bg-transparent text-gray-300 border-gray-600'}`}
                 >
                     Filmes
+                </button>
+                 {/* Added TV Chip */}
+                <button 
+                    onClick={() => setActiveTab(ContentType.LIVE)}
+                    className={`px-4 py-1.5 rounded-full text-xs font-medium border transition-colors whitespace-nowrap ${activeTab === ContentType.LIVE ? 'bg-white text-black border-white' : 'bg-transparent text-gray-300 border-gray-600'}`}
+                >
+                    TV
                 </button>
                 <button className="px-4 py-1.5 rounded-full text-xs font-medium border border-gray-600 text-gray-300 bg-transparent flex items-center gap-1 whitespace-nowrap">
                     Categorias <ChevronDown size={12} />
@@ -380,6 +395,10 @@ const App: React.FC = () => {
                     </div>
                 </div>
              )}
+             <button onClick={() => setShowNotifications(true)} className="text-gray-400 hover:text-white relative">
+                 <Bell size={20} strokeWidth={1.5} />
+                 <span className="absolute -top-1 -right-1 w-2 h-2 bg-red-600 rounded-full border border-black"></span>
+             </button>
              <button onClick={() => setShowSettings(true)} className="text-gray-400 hover:text-white">
                 <SettingsIcon size={20} strokeWidth={1.5} />
              </button>
@@ -486,6 +505,11 @@ const App: React.FC = () => {
                 </button>
             </div>
         </div>
+
+        {/* Notifications Overlay */}
+        {showNotifications && (
+            <NotificationsOverlay onClose={() => setShowNotifications(false)} />
+        )}
 
         {/* Settings Overlay */}
         {showSettings && (
